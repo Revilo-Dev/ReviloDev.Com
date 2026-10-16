@@ -1,6 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, NavLink, Routes } from 'react-router-dom';
 import useThemeStore from './store/ThemeStore.js';
+import usePreferencesStore from './store/PreferencesStore.js';
+import useAdminStore from './store/AdminStore.js';
+import Dashboard from './pages/Dashboard.jsx';
+import AnalyticsTracker from './components/AnalyticsTracker.jsx';
 import ThemeDropdown from './components/ThemeDropDown.jsx';
 import Home from './pages/Home.jsx';
 import About from './pages/About.jsx';
@@ -9,7 +13,7 @@ import Modding from './pages/Modding.jsx';
 import Links from './pages/Gallery.jsx';
 import NoMatch from './pages/NoMatch.jsx';
 import Footer from './components/Footer';
-import { Home as HomeIcon, Info, Folder, Hammer, Images } from 'lucide-react';
+import { Home as HomeIcon, Info, Folder, Hammer, Images, ShieldCheck } from 'lucide-react';
 import AboutRunic from './pages/modding/runic/aboutrunic.jsx';
 import AboutBoundless from './pages/modding/boundless/aboutboundless.jsx';
 import RunicWiki from './pages/modding/runic/runicwiki.jsx';
@@ -22,6 +26,7 @@ import OneWidgetPrivacyPolicy from './pages/OneWidgetPrivacyPolicy.jsx';
 import EnforcedWiki from './pages/modding/enforced/enforcedwiki.jsx';
 import ArsenalWiki from './pages/modding/arsenal/arsenalwiki.jsx';
 import './components/MicroInteractions.css';
+import './Preferences.css';
 
 
 
@@ -38,10 +43,29 @@ const navItems = [
 
 function App() {
   const { theme } = useThemeStore();
+  const { cardLayout, animationsEnabled, blurEnabled } = usePreferencesStore();
+  const admin = useAdminStore((state) => state.admin);
+  const checkSession = useAdminStore((state) => state.checkSession);
+
+  useEffect(() => {
+    checkSession();
+    const refreshSession = () => {
+      if (document.visibilityState === 'visible' && useAdminStore.getState().admin) checkSession();
+    };
+    const timer = setInterval(refreshSession, 60000);
+    window.addEventListener('focus', refreshSession);
+    document.addEventListener('visibilitychange', refreshSession);
+    return () => {
+      clearInterval(timer);
+      window.removeEventListener('focus', refreshSession);
+      document.removeEventListener('visibilitychange', refreshSession);
+    };
+  }, [checkSession]);
 
   return (
     <Router>
-      <div data-theme={theme} className="bg-base-200 min-h-max flex flex-col">
+      <AnalyticsTracker />
+      <div data-theme={theme} data-card-layout={cardLayout} data-animations={animationsEnabled ? 'enabled' : 'disabled'} data-blur={blurEnabled ? 'enabled' : 'disabled'} className="bg-base-200 min-h-max flex flex-col">
 
         <nav>
           <div className="NavBar">
@@ -49,6 +73,9 @@ function App() {
               {React.createElement(icon, { className: 'icon', 'aria-hidden': true })}
               <span className="label">{label}</span>
             </NavLink>)}
+            {admin && <NavLink to="/dashboard" aria-label="Admin dashboard" title="Admin dashboard" className={({ isActive }) => `btn btn-soft AH-Underline nav-tab admin-nav-tab ${isActive ? 'nav-tab-active' : ''}`}>
+              <ShieldCheck className="icon" aria-hidden="true" />
+            </NavLink>}
           </div>
         </nav>
 
@@ -57,6 +84,7 @@ function App() {
         </div>
 
         <Routes>
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/" element={<Home />} />
           <Route path="/About" element={<About />} />
           <Route path="/Projects" element={<Projects />} />

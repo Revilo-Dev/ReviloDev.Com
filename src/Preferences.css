@@ -1,0 +1,41 @@
+[data-card-layout="list"] .project-collection { grid-template-columns: minmax(0, 1fr); }
+[data-card-layout="list"] .project-card { flex-direction: row; }
+[data-card-layout="list"] .project-card-art {
+  width: clamp(160px, 24vw, 280px);
+  height: auto;
+  min-height: 180px;
+  -webkit-mask-image: linear-gradient(to right, #000 48%, transparent 100%);
+  mask-image: linear-gradient(to right, #000 48%, transparent 100%);
+}
+[data-card-layout="list"] .project-card-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(200px, 32%);
+  align-items: center;
+}
+@media (max-width: 680px) {
+  [data-card-layout="list"] .project-card-art { width: 110px; min-height: 160px; }
+  [data-card-layout="list"] .project-card-body { display: flex; min-width: 0; padding: 12px; gap: 12px; }
+  [data-card-layout="list"] .project-card-heading .card-title { font-size: 1rem; }
+}
+
+[data-animations="disabled"],
+[data-animations="disabled"] *,
+[data-animations="disabled"] *::before,
+[data-animations="disabled"] *::after {
+  animation: none !important;
+  transition: none !important;
+  scroll-behavior: auto !important;
+}
+[data-animations="disabled"] :is(.project-card-icon, .nav-tab, .nav-tab .icon, .micro-arrow, .theme-option, .theme-picker-trigger svg, .about-software-card, .about-project-links a, [class*="AH-"]) { transform: none !important; }
+/* Keep the scrolling showcase visible when its animation is switched off. */
+[data-animations="disabled"] .wrapper { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; height: auto; mask-image: none; }
+[data-animations="disabled"] .wrapper .item { position: static; }
+
+[data-blur="disabled"],
+[data-blur="disabled"] *,
+[data-blur="disabled"] *::before,
+[data-blur="disabled"] *::after {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+[data-blur="disabled"] :is(.NavBar, .ThemeButton) { background: var(--color-base-200); }

@@ -1,0 +1,11 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Only the server's Admin SDK may read or write dashboard data.
+    match /analyticsDays/{id} { allow read, write: if false; }
+    match /analyticsViews/{id} { allow read, write: if false; }
+    match /analyticsVisits/{id} { allow read, write: if false; }
+    match /dashboardSessions/{id} { allow read, write: if false; }
+    match /dashboardRateLimits/{id} { allow read, write: if false; }
+  }
+}

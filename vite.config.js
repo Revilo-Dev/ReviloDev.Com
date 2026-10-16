@@ -11,6 +11,9 @@ export default defineConfig({
   server: {
     host: '127.0.0.1',
     port: 5173,
+    proxy: {
+      '/api': { target: 'http://127.0.0.1:5001/demo-revilo/us-central1/dashboardApi', changeOrigin: true },
+    },
   },
   build: {
     assetsDir: 'assets', // This tells Vite to put assets in a folder named 'assets' inside the output directory

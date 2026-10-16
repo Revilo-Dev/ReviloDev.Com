@@ -1,7 +1,33 @@
-import React, { useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
+import { Gamepad2, Globe, Hammer, LayoutGrid, Smartphone, Tags } from 'lucide-react';
+import './ProjectCards.css';
+
+const tagIcons = { All: LayoutGrid, Websites: Globe, Apps: Smartphone, Modding: Hammer, Games: Gamepad2 };
 
 const TagSelector = ({ tags, onTagSelect }) => {
   const [selectedTag, setSelectedTag] = useState('All');
+  const barRef = useRef(null);
+  const highlightRef = useRef(null);
+
+  useLayoutEffect(() => {
+    const bar = barRef.current;
+    const highlight = highlightRef.current;
+    const updateHighlight = () => {
+      const selected = bar.querySelector('[aria-pressed="true"]');
+      if (!selected) return;
+      highlight.style.width = `${selected.offsetWidth}px`;
+      highlight.style.height = `${selected.offsetHeight}px`;
+      highlight.style.transform = `translate(${selected.offsetLeft}px, ${selected.offsetTop}px)`;
+    };
+    updateHighlight();
+    const frame = requestAnimationFrame(() => { highlight.dataset.ready = 'true'; });
+    const observer = new ResizeObserver(updateHighlight);
+    observer.observe(bar);
+    return () => {
+      cancelAnimationFrame(frame);
+      observer.disconnect();
+    };
+  }, [selectedTag]);
 
   const handleTagClick = (tag) => {
     setSelectedTag(tag);
@@ -9,45 +35,22 @@ const TagSelector = ({ tags, onTagSelect }) => {
   };
 
   return (
-    <div className="flex justify-center space-x-4 mb-8 overflow-y-hidden overflow-x-auto  p-5 max-sm:pl-[14rem]">
-      <button
-        className={`btn ${selectedTag === 'All' ? 'btn-primary' : 'btn-soft'} AH-Underline`}
-        onClick={() => handleTagClick('All')}
-      >
-        All
-      </button>
-      {tags.map((tag) => (
-        <button
+    <div ref={barRef} className="project-filters bg-base-300" role="group" aria-label="Filter projects by category">
+      <span ref={highlightRef} className="project-filter-highlight" aria-hidden="true" />
+      {['All', ...tags].map((tag) => {
+        const Icon = tagIcons[tag] || Tags;
+        return <button
           key={tag}
-          className={`btn ${selectedTag === tag ? 'btn-primary' : 'btn-soft'} AH-Underline`}
+          type="button"
+          aria-pressed={selectedTag === tag}
+          className="btn btn-sm btn-ghost project-filter"
           onClick={() => handleTagClick(tag)}
         >
-          {tag}
-        </button>
-      ))}
+          <Icon size={17} aria-hidden="true" />{tag}
+        </button>;
+      })}
     </div>
   );
 };
 
 export default TagSelector;
-
-{/* Use example with info cards
-  <div>
-        {filteredProjects.map((project, index) => (
-          <InfoCard
-            key={index}
-            title={project.title}
-            subtitle={project.subtitle}
-            row1={project.rows && project.rows[0] ? project.rows[0].content : null}
-            row2={project.rows && project.rows[1] ? project.rows[1].content : null}
-            row3={project.rows && project.rows[2] ? project.rows[2].content : null}
-            img={project.img} 
-            description={project.description}
-            linkUrl={project.linkUrl} 
-            linkname={project.linkname} 
-          />
-        ))}
-
-      </div>
-  
-  */}

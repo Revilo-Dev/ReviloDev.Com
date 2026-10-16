@@ -1,4 +1,7 @@
 {
+  "functions": [{ "source": "functions", "codebase": "dashboard", "ignore": ["node_modules", ".git", ".secret.local", ".env*", "*.local", "test", "*.log"] }],
+  "firestore": { "rules": "firestore.rules", "indexes": "firestore.indexes.json" },
+  "emulators": { "functions": { "host": "127.0.0.1", "port": 5001 }, "firestore": { "host": "127.0.0.1", "port": 8088 }, "hosting": { "host": "127.0.0.1", "port": 5000 }, "ui": { "enabled": false }, "singleProjectMode": true },
   "hosting": {
     "public": "dist",
     "ignore": [
@@ -7,6 +10,7 @@
       "**/node_modules/**"
     ],
     "rewrites": [
+      { "source": "/api/**", "function": { "functionId": "dashboardApi", "region": "us-central1" } },
       {
         "source": "**",
         "destination": "/index.html"

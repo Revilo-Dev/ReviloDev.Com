@@ -1,0 +1,33 @@
+import assert from 'node:assert/strict';
+import { randomUUID } from 'node:crypto';
+import { test } from 'node:test';
+import { initializeApp } from 'firebase-admin/app';
+import { getFirestore } from 'firebase-admin/firestore';
+import { createStore } from '../store.mjs';
+import { hashToken } from '../security.mjs';
+
+test('Firestore transactions deduplicate events and direct browser reads are denied', { skip: !process.env.FIRESTORE_EMULATOR_HOST }, async () => {
+  const db = getFirestore(initializeApp({ projectId: 'demo-revilo' }));
+  const store = createStore(db);
+  const day = new Date().toISOString().slice(0, 10);
+  const id = randomUUID();
+  const event = { visitId: randomUUID(), viewId: randomUUID(), path: `/integration-${id}`, source: `integration-${id}.test`, activeMs: 0 };
+  await Promise.all([store.recordEvent(event), store.recordEvent(event)]);
+  await store.recordEvent({ ...event, activeMs: 1000 });
+  await store.recordEvent({ ...event, activeMs: 1000 });
+  const after = (await db.collection('analyticsDays').doc(day).get()).data();
+  const page = after.pages[hashToken(event.path)];
+  assert.equal(page.views, 1);
+  assert.equal(page.activeMs, 1000);
+  assert.equal(after.sources[hashToken(event.source)].visits, 1);
+  const key = randomUUID();
+  await store.createSession(key, { expiresAt: Date.now() + 1000 });
+  assert.ok(await store.getSession(key));
+  await store.deleteSession(key);
+  assert.equal(await store.getSession(key), undefined);
+  assert.equal(await store.allowRequest(key, 1), true);
+  assert.equal(await store.allowRequest(key, 1), false);
+  const response = await fetch(`http://${process.env.FIRESTORE_EMULATOR_HOST}/v1/projects/demo-revilo/databases/(default)/documents/analyticsDays`);
+  assert.equal(response.status, 403);
+  await db.terminate();
+});

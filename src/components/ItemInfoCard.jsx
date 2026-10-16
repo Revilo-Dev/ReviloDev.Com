@@ -1,44 +1,44 @@
-import React from 'react';
-import { ExternalLink } from 'lucide-react';
+import { BookOpen, CalendarDays, ExternalLink, History, ShieldCheck } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import RepositoryUpdated from './RepositoryUpdated';
+import './ProjectCards.css';
 
-const ItemInfoCard = ({ img, title, row1, row2, linkUrl, linkname, policyLinkUrl, policyLinkName }) => {
+const ItemInfoCard = ({ img, title, subtitle, description, row1, row2, row3, showLastUpdated, linkUrl, linkname, policyLinkUrl, policyLinkName }) => {
+  const PolicyIcon = policyLinkName === 'Wiki' ? BookOpen : ShieldCheck;
+  const policyContent = <><PolicyIcon size={16} aria-hidden="true" /><span>{policyLinkName || 'Privacy Policy'}</span></>;
+
   return (
-    <div className="bg-base-300 rounded-xl shadow-lg p-4 flex flex-col items-center AH-Expand AH-CardOutline transition w-full">
-      <div className="w-full flex flex-col items-center">
-        <img
-          src={img}
-          alt={title}
-          className="rounded-lg border-2 border-primary mb-3 w-32 h-32 object-contain"
-        />
-        <h3 className="text-primary font-bold text-lg mb-4">{title}</h3>
+    <article className="card bg-base-300 project-card">
+      <div className="project-card-art">
+        {img && <img src={img} alt={title} className="project-card-icon" loading="lazy" />}
       </div>
-
-      <div className="w-full flex flex-col gap-2">
-        {row1 && (<div className=' TransparentUI mt-3 w-10/10 p-2 rounded-sm'>{row1}</div>)}
-        {row2 && (<div className=' TransparentUI mt-3 w-10/10 p-2 rounded-sm'>{row2}</div>)}
+      <div className="card-body project-card-body">
+        <div className="project-card-heading">
+          <h3 className="card-title text-primary">{title}</h3>
+          {subtitle && <p className="project-card-subtitle">{subtitle}</p>}
+          {description && <p className="project-card-subtitle">{description}</p>}
+        </div>
+        <div className="project-card-details">
+          {[row1, row2, row3].map((row, index) => {
+            const Icon = index === 1 ? History : CalendarDays;
+            return row && <div className="project-card-meta bg-base-200" key={index}>
+              <Icon size={16} aria-hidden="true" /><div>{row}</div>
+            </div>;
+          })}
+          {showLastUpdated && <RepositoryUpdated projectTitle={title} />}
+          {linkUrl && <a href={linkUrl} className="btn btn-secondary project-card-action" target="_blank" rel="noopener noreferrer">
+            <span>{linkname || 'Visit'}</span><ExternalLink size={16} aria-hidden="true" />
+          </a>}
+          {policyLinkUrl && (policyLinkUrl.startsWith('/') ? (
+            <Link to={policyLinkUrl} className="btn btn-soft project-card-action">{policyContent}</Link>
+          ) : (
+            <a href={policyLinkUrl} className="btn btn-soft project-card-action" target="_blank" rel="noopener noreferrer">
+              {policyContent}<ExternalLink size={16} aria-hidden="true" />
+            </a>
+          ))}
+        </div>
       </div>
-          <a href={linkUrl} className="btn btn-secondary btn-sm ransparentUI mt-3 w-10/10 p-2 rounded-sm AH-Pulse" target="_blank" rel="noopener noreferrer"> 
-            {linkname}
-            <ExternalLink className="ml-1 w-5 h-5" />
-          </a>
-          {policyLinkUrl && (
-            policyLinkUrl.startsWith('/') ? (
-              <Link to={policyLinkUrl} className="btn btn-secondary btn-sm ransparentUI mt-3 w-10/10 p-2 rounded-sm AH-Pulse">
-                {policyLinkName || 'Privacy Policy'}
-              </Link>
-            ) : (
-              <a href={policyLinkUrl} className="btn btn-secondary btn-sm ransparentUI mt-3 w-10/10 p-2 rounded-sm AH-Pulse" target="_blank" rel="noopener noreferrer">
-                {policyLinkName || 'Privacy Policy'}
-                <ExternalLink className="ml-1 w-5 h-5" />
-              </a>
-            )
-          )}
-
-
-
-      
-    </div>
+    </article>
   );
 };
 

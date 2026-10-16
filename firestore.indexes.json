@@ -1,0 +1,12 @@
+{
+  "indexes": [],
+  "fieldOverrides": [
+    { "collectionGroup": "dashboardSessions", "fieldPath": "deleteAfter", "ttl": true, "indexes": [] },
+    { "collectionGroup": "dashboardRateLimits", "fieldPath": "deleteAfter", "ttl": true, "indexes": [] },
+    { "collectionGroup": "analyticsViews", "fieldPath": "deleteAfter", "ttl": true, "indexes": [] },
+    { "collectionGroup": "analyticsVisits", "fieldPath": "deleteAfter", "ttl": true, "indexes": [] },
+    { "collectionGroup": "analyticsDays", "fieldPath": "deleteAfter", "ttl": true, "indexes": [] },
+    { "collectionGroup": "analyticsDays", "fieldPath": "pages", "indexes": [] },
+    { "collectionGroup": "analyticsDays", "fieldPath": "sources", "indexes": [] }
+  ]
+}

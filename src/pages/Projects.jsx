@@ -12,7 +12,6 @@ const allProjects = [
     description: "",
     rows: [
       { content: <p><b>Published:</b> Jan 08, 2025</p> },
-      { content: <p><b>Last updated:</b> OCt 1, 2026</p> },
     ],
     linkUrl: "https://revilodev.com/",
     linkname: "Visit",
@@ -66,7 +65,6 @@ const allProjects = [
     description: "",
     rows: [
       { content: <p><b>Published:</b> Mar 29, 2025</p> },
-      { content: <p><b>Last updated:</b> May 25, 2025</p> },
     ],
     linkUrl: "https://github.com/revilo-dev/revilodevcom",
     linkname: "Visit",
@@ -79,7 +77,6 @@ const allProjects = [
     description: "",
     rows: [
       { content: <p><b>Published:</b> Apr 06, 2025</p> },
-      { content: <p><b>Last updated:</b> Apr 08, 2025</p> },
     ],
     linkUrl: "https://itch-webgames.web.app/",
     linkname: "Visit",
@@ -92,7 +89,6 @@ const allProjects = [
     description: "",
     rows: [
       { content: <p><b>Published:</b> Apr 17, 2025</p> },
-      { content: <p><b>Last updated:</b> Apr 21, 2025</p> },
     ],
     linkUrl: "https://stacks-j2s9.onrender.com/",
     linkname: "Visit",
@@ -105,7 +101,6 @@ const allProjects = [
     description: "",
     rows: [
       { content: <p><b>Published:</b> Apr 11, 2025</p> },
-      { content: <p><b>Last updated:</b> Apr 11, 2025</p> },
     ],
     linkUrl: "https://weatherdashboard-rd.web.app/",
     linkname: "Visit",
@@ -118,7 +113,6 @@ const allProjects = [
     description: "",
     rows: [
       { content: <p><b>Published:</b> Apr 23, 2026`</p> },
-      { content: <p><b>Last updated:</b> Apr 24, 2026</p> },
     ],
     linkUrl: "https://swift-dashboard-bd0ad.web.app",
     linkname: "Visit",
@@ -131,7 +125,6 @@ const allProjects = [
     description: "",
     rows: [
       { content: <p><b>Published:</b> Oct 11, 2026</p> },
-      { content: <p><b>Last updated:</b> Oct 16, 2026</p> },
     ],
     linkUrl: "https://spoko.site",
     linkname: "Visit",
@@ -349,14 +342,15 @@ function Projects() {
     <div className="body">
       <HeaderCard />
       <br />
-      <div className="flex justify-center w-1/1 A-SlideDownBounce"><TagSelector className='justify-center' tags={tags} onTagSelect={handleTagSelect} /></div>
-      <div className="content A-SlideUpBounce grid  md:grid-cols-3 gap-6">
+      <div className="flex justify-center w-full A-SlideDownBounce"><TagSelector tags={tags} onTagSelect={handleTagSelect} /></div>
+      <div className="content project-collection A-SlideUpBounce grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
-        {filteredProjects.map((project, index) => (
+        {filteredProjects.map((project) => (
           <ItemInfoCard
-            key={index}
+            key={project.title}
             title={project.title}
             subtitle={project.subtitle}
+            showLastUpdated={project.tag === 'Websites' || project.tag === 'Modding'}
             row1={project.rows && project.rows[0] ? project.rows[0].content : null}
             row2={project.rows && project.rows[1] ? project.rows[1].content : null}
             row3={project.rows && project.rows[2] ? project.rows[2].content : null}

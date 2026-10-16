@@ -48,6 +48,7 @@ nav {
 }
 
 .nav-tab { transition: background-color .18s ease, color .18s ease, transform .16s ease; }
+.admin-nav-tab.btn { width: 40px; min-width: 40px; padding: 0; flex: none; }
 .nav-tab .icon { transition: transform .2s cubic-bezier(.2, 1.3, .4, 1), color .18s ease; }
 .nav-tab:hover .icon, .nav-tab:focus-visible .icon { transform: translateY(-2px) scale(1.08); }
 .nav-tab:active { transform: scale(.95); }
@@ -96,6 +97,9 @@ nav {
 }
 
 @media (max-width: 660px) {
+  .NavBar { gap: 4px; padding-inline: 8px; }
+  .nav-tab.btn { min-width: 0; padding-inline: 10px; flex: 1; }
+  .admin-nav-tab.btn { width: 36px; min-width: 36px; flex: 0 0 36px; }
   .label {
     display: none;
   }

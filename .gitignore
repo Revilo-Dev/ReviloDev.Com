@@ -23,3 +23,12 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Server credentials and local analytics data must never be published.
+.env
+.env.*
+!.env.example
+.secret.local
+.dashboard-local/
+functions/node_modules/
+*-debug.log
