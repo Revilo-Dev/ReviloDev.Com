@@ -125,6 +125,19 @@ const allProjects = [
     tag: "Websites",
   },
   {
+    title: "Spoko",
+    subtitle: "A Portofilo Website for spoko - freelance, built in react",
+    img: "/assets/spoko.png",
+    description: "",
+    rows: [
+      { content: <p><b>Published:</b> Oct 11, 2026</p> },
+      { content: <p><b>Last updated:</b> Oct 16, 2026</p> },
+    ],
+    linkUrl: "https://spoko.site",
+    linkname: "Visit",
+    tag: "Websites",
+  },
+  {
     title: "Twilight Zone",
     subtitle: "My first published game",
     img: "/assets/Twilight.png",

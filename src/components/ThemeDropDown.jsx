@@ -42,8 +42,7 @@ function ThemeDropdown() {
   };
 
   return <div className="theme-picker" ref={pickerRef}>
-    {open && <div className="theme-picker-panel bg-base-100" id="theme-picker-panel" role="group" aria-label="Choose a theme">
-      <div className="theme-picker-heading"><div><strong>Choose a theme</strong><span>Current: {themeLabel(theme)}</span></div><Palette size={19} aria-hidden="true" /></div>
+    {open && <div className="theme-picker-panel SlideUp bg-base-100" id="theme-picker-panel" role="group">
       <div className="theme-picker-grid">
         {themes.map((name) => <button
           key={name}
